@@ -1,0 +1,12 @@
+apiVersion: "v2"
+name: "fluxcd-viewer"
+version: 1.0.0
+appVersion: "1.0.0"
+description: A Helm chart for fluxcd viewer
+type: application
+
+icon: https://www.vectorlogo.zone/logos/fluxcdio/fluxcdio-ar21.svg
+
+maintainers:
+- name: didlawowo
+  email: chris@dc-consulting.pro

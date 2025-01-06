@@ -1,0 +1,87 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "application.fullname" . }}
+  labels: {{- include "application.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- if and (not .Values.autoscaling.enabled)  }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "application.selectorLabels" . | nindent 6 }}
+  strategy: {{ toYaml .Values.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels: {{- include "application.labels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- range $dotenv := .Values.secrets.dotenv }}
+        checksum/secret-{{ $dotenv.name }}: {{ (tpl ($.Files.Glob $dotenv.path).AsSecrets $ ) | sha256sum }}
+        {{- end }}
+        {{- range $dotenv := .Values.configMaps.dotenv }}
+        checksum/config-{{ $dotenv.name }}: {{ (tpl ($.Files.Glob $dotenv.path).AsConfig $ ) | sha256sum }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ default (include "application.fullname" .) .Values.serviceAccount.name }}
+      {{- with .Values.initContainers }}
+      initContainers: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ default .Values.application.containerName (include "application.fullname" .) }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.application.ports }}
+          ports: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.application.command }}
+          command: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.application.args }}
+          args: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.env }}
+          env: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            httpGet:
+              path: {{ .httpGet.path }}
+              port: {{ .httpGet.port }}
+              scheme: {{ .httpGet.scheme }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            successThreshold: {{ .successThreshold }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            httpGet:
+              path: {{ .httpGet.path }}
+              port: {{ .httpGet.port }}
+              scheme: {{ .httpGet.scheme }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            successThreshold: {{ .successThreshold }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}

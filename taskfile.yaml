@@ -1,20 +1,42 @@
 version: '3'
 
-vars:
-  IMAGE_NAME: fizzbuzz2/portal-checker:v1.7.0
-
 tasks:
-  build:
-    desc: Build Docker image
+  default:
+    desc: list all tasks
     cmds:
-    - docker compose build --push
+    - task --list
 
   run:
-    desc: Run the Docker container
+    desc: Run the go project
+    cmds:
+    - go run main.go
+
+  bootstrap:
+    desc: Initialize the project and install dependencies
+    cmds:
+    - go mod
+
+  up:
+    desc: Start docker compose services
     cmds:
     - docker compose up -d
 
-default:
-  desc: List available tasks
-  cmds:
-  - task --list
+  build:
+    desc: Stop docker compose services
+    cmds:
+    - docker compose build
+
+  down:
+    desc: Stop docker compose services
+    cmds:
+    - docker compose down
+
+  logs:
+    desc: View docker compose logs
+    cmds:
+    - docker compose logs -f
+
+  ps:
+    desc: List docker compose services
+    cmds:
+    - docker compose ps

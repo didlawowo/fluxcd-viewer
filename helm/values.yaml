@@ -1,0 +1,98 @@
+image:
+  repository: fizzbuzz2/fluxcd-viewer
+  tag: "318c320"
+  pullPolicy: "IfNotPresent"
+  pullSecrets:
+  - name: registry-credentials
+
+commonLabels:
+  tags.datadoghq.com/env: home
+  tags.datadoghq.com/service: fluxcd-viewer
+  tags.datadoghq.com/version: v1.0.0
+
+domainName: "fluxcd-viewer.develop.oursain.net"
+autoscaling:
+  enabled: false
+replicas: 1
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 25%
+    maxSurge: 25%
+
+application:
+  ports:
+  - name: http
+    containerPort: 5000
+    protocol: TCP
+  containerName: fluxcd-viewer
+  command: []
+  args: []
+service:
+  port: 80
+  targetPort: 5000
+  type: ClusterIP
+  portName: http
+externalSecrets: []
+secrets:
+  dotenv: []
+  # - name: app-dotenv
+  #   path: values/prod/secrets/app.env
+  files: []
+  # - name: secret-file
+  #   path: values/prod/secrets/file
+configMaps:
+  files: []
+  dotenv: []
+volumeMounts: []
+# - name: fluxcd-viewer
+#   mountPath: /app/url.txt
+
+volumes: []
+# - name: fluxcd-viewer
+#   configMap:
+#     name: fluxcd-viewer
+ingress:
+  ingressClassName: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-cloudflare
+
+serviceAccount:
+  annotations: {}
+  name: fluxtcd-viewer
+
+podAnnotations:
+  ad.datadoghq.com/fluxcd-viewer.logs: '[{"source":"python", "service":"fluxcd-viewer}]'
+initContainers: []
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+envFrom: []
+nodeSelector: {}
+livenessProbe:
+  httpGet:
+    scheme: HTTP
+    path: /
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 2
+  successThreshold: 1
+  failureThreshold: 3
+
+readinessProbe:
+
+  httpGet:
+    scheme: HTTP
+    path: /
+    port: 3000
+  initialDelaySeconds: 5
+  periodSeconds: 30
+  timeoutSeconds: 2
+  successThreshold: 1
+  failureThreshold: 3

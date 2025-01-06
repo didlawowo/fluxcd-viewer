@@ -1,0 +1,23 @@
+# Role definition (e.g., ingress-reader-role.yaml)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "application.fullname" . }}
+rules:
+- apiGroups: ["kustomize.toolkit.fluxcd.io/v1"]
+  resources: ["kustomizations", ]
+  verbs: ["get", "list"]
+---
+# Role binding definition (e.g., ingress-reader-binding.yaml)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name:  {{ template "application.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ template "application.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ template "application.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
