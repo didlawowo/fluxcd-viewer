@@ -1,15 +1,13 @@
 image:
   repository: fizzbuzz2/fluxcd-viewer
-  tag: "318c320"
+  tag: "bd48fa2"
   pullPolicy: "IfNotPresent"
   pullSecrets:
-  - name: registry-credentials
-
+    - name: registry-credentials
 commonLabels:
   tags.datadoghq.com/env: home
   tags.datadoghq.com/service: fluxcd-viewer
   tags.datadoghq.com/version: v1.0.0
-
 domainName: "fluxcd-viewer.develop.oursain.net"
 autoscaling:
   enabled: false
@@ -19,12 +17,11 @@ strategy:
   rollingUpdate:
     maxUnavailable: 25%
     maxSurge: 25%
-
 application:
   ports:
-  - name: http
-    containerPort: 5000
-    protocol: TCP
+    - name: http
+      containerPort: 5000
+      protocol: TCP
   containerName: fluxcd-viewer
   command: []
   args: []
@@ -56,11 +53,9 @@ ingress:
   ingressClassName: traefik
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-cloudflare
-
 serviceAccount:
   annotations: {}
   name: fluxtcd-viewer
-
 podAnnotations:
   ad.datadoghq.com/fluxcd-viewer.logs: '[{"source":"python", "service":"fluxcd-viewer}]'
 initContainers: []
@@ -71,7 +66,6 @@ resources:
   requests:
     cpu: 50m
     memory: 128Mi
-
 envFrom: []
 nodeSelector: {}
 livenessProbe:
@@ -84,9 +78,7 @@ livenessProbe:
   timeoutSeconds: 2
   successThreshold: 1
   failureThreshold: 3
-
 readinessProbe:
-
   httpGet:
     scheme: HTTP
     path: /
