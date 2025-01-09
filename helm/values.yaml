@@ -1,14 +1,11 @@
 image:
   repository: fizzbuzz2/fluxcd-viewer
-  tag: "6c745fd"
+  tag: "1d3d127"
   pullPolicy: "IfNotPresent"
   pullSecrets: []
-
 commonLabels:
   env: dev
-
 domainName: "fluxcd-viewer.example.com"
-
 autoscaling:
   enabled: false
 replicas: 1
@@ -19,13 +16,12 @@ strategy:
     maxSurge: 25%
 application:
   ports:
-  - name: http
-    containerPort: 8080
-    protocol: TCP
+    - name: http
+      containerPort: 8080
+      protocol: TCP
   containerName: fluxcd-viewer
   command: []
   args: []
-
 service:
   port: 80
   targetPort: 8080
@@ -42,15 +38,13 @@ configMaps:
   files: []
   dotenv: []
 volumeMounts: []
-
 volumes: []
-
 ingress:
   ingressClassName: traefik
   annotations: {}
   hosts:
-  - host: fluxcd-viewer.develop.oursain.net
-    paths:
+    - host: fluxcd-viewer.develop.oursain.net
+      paths:
 serviceAccount:
   annotations: {}
   name: fluxtcd-viewer
