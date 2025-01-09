@@ -1,78 +1,83 @@
 # 🚀 FluxCD Viewer
 
-FluxCD Viewer est une interface web légère permettant de visualiser et monitorer l'état de vos Kustomizations FluxCD dans votre cluster Kubernetes.
+FluxCD Viewer is a lightweight web interface for visualizing and monitoring the state of your FluxCD Kustomizations in your Kubernetes cluster.
 
-## 🎯 Fonctionnalités
+## 🎯 Features
 
-- Vue d'ensemble des Kustomizations FluxCD
-- Statut en temps réel des déploiements
-- Regroupement par catégories (apis, apps, addons)
-- Détails des conditions et messages d'erreur
+- Overview of FluxCD Kustomizations
+- Real-time deployment status  
+- Grouping by categories (apis, apps, addons)
+- Detailed conditions and error messages
 
-## 🛠️ Prérequis
+## 🛠️ Prerequisites
 
-- Un cluster Kubernetes avec FluxCD installé
-- Un accès kubectl configuré (fichier kubeconfig)
+- Kubernetes cluster with FluxCD installed
+- Configured kubectl access (kubeconfig file)
 
 ## 📦 Installation
 
-### Option 1 : Docker
+### Option 1: Docker
 
-\```bash
-
-## Lancer le container avec votre kubeconfig monté
-
+```bash
+# Run container with mounted kubeconfig
 docker run -p 8080:8080 \
  -v ~/.kube/config:/root/.kube/config \
  didlawowo/fluxcd-viewer:latest
-\```
+```
 
 ### Option 2 : Helm
 
-## Installer le chart
-
-helm install fluxcd-viewer fluxcd-viewer/fluxcd-viewer
-\```
+```
+cd helm
+helm install fluxcd-viewer
+```
 
 ## 📝 Configuration
 
-L'application utilise les variables d'environnement suivantes :
+The application uses the following environment variables:
 
 | Variable | Description              | Default |
 | -------- | ------------------------ | ------- |
-| `PORT`   | Port d'écoute du serveur | `8080`  |
+| `PORT`   | listening port           | `8080`  |
 
-## 🔍 Utilisation
+## 🔍 Usage
 
-1. Accédez à l'interface web : `http://localhost:8080`
-2. L'interface affiche automatiquement vos Kustomizations
-3. Cliquez sur une Kustomization pour voir ses détails
+Access the web interface: <http://localhost:8080>
+The interface automatically displays your Kustomizations
+Click on a Kustomization to see its details
 
-## 🏗️ Développement local
+## 🏗️ Local Developpment
 
-\```bash
+### Clone the repo
 
-# Cloner le repo
-
-git clone <https://github.com/didlawowo/fluxcd-viewer.git>
+```bash
+git clone https://github.com/didlawowo/fluxcd-viewer.git
 cd fluxcd-viewer
+```
 
-# Installer les dépendances
+### Install dependencies
 
+```bash
 go mod download
+```
 
-# Lancer en local
+### Run locally
 
+```bash
 go run main.go
-\```
+```
 
-## 🔐 Sécurité
+## 🔐 Security
 
-L'application nécessite un accès en lecture seule aux ressources FluxCD. Il est recommandé de créer un ServiceAccount dédié avec les permissions minimales requises.
+The application requires read-only access to FluxCD resources. The chart creates a service account with minimal required permissions. The ingress is configured to expose the service.
 
-## 🤝 Contribution
+## 📝 Contributing
 
-Les contributions sont bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## 📝 Credits
+
+This project was inspired by the need for a simple and lightweight web interface to view FluxCD Kustomizations.
 
 ## 📄 Licence
 
