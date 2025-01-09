@@ -54,7 +54,7 @@
                         <div class="namespace-badge">{{.Namespace}}</div>
                         <h3 class="resource-name">{{.Resource}}</h3>
                     </div>
-                    <div class="status-icon {{if eq .Status " False"}}status-error{{else}}status-ok{{end}}">
+                    <div class="status-icon {{if eq .Status "False"}}status-error{{else}}status-ok{{end}}">
                         {{if eq .Status "True"}}
                         <i class="fas fa-check-circle"></i>
                         {{else}}
