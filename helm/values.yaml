@@ -1,6 +1,6 @@
 image:
   repository: fizzbuzz2/fluxcd-viewer
-  tag: "ce54ed0"
+  tag: "6c745fd"
   pullPolicy: "IfNotPresent"
   pullSecrets:
     - name: registry-credentials
