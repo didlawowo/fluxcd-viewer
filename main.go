@@ -206,7 +206,6 @@ func main() {
 	})
 
 	// 📢 Logs plus détaillés
-	log.Printf("📁 Dossier statique configuré: /static/")
 	log.Printf("🛣️  Routes configurées: /, /analyze, /details, /health")
 	log.Printf("🌐 Serveur prêt sur http://localhost:8080")
 

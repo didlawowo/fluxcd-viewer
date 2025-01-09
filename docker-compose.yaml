@@ -1,12 +1,12 @@
 services:
-  flux-frontend:
-    hostname: flux-frontend
-    container_name: flux-frontend
-    image: fizzbuzz2/k8s-flux-frontend
+  fluxcd-viewer:
+    hostname: fluxcd-viewer
+    container_name: fluxcd-viewer
+    image: fizzbuzz2/fluxcd-viewer
     build: 
       platforms:
           - linux/amd64
-          # - linux/arm64
+          - linux/arm64
       context: .
       dockerfile: Dockerfile
     ports:
@@ -15,4 +15,4 @@ services:
     volumes:
       - ${HOME}/.kube/config:/root/.kube/config:ro
       # Monter les credentials AWS
-      - ${HOME}/.aws:/root/.aws:ro
+      #- ${HOME}/.aws:/root/.aws:ro

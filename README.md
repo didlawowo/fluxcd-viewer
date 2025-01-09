@@ -8,8 +8,6 @@ FluxCD Viewer est une interface web légère permettant de visualiser et monitor
 - Statut en temps réel des déploiements
 - Regroupement par catégories (apis, apps, addons)
 - Détails des conditions et messages d'erreur
-- Healthcheck endpoint
-- Interface responsive et moderne
 
 ## 🛠️ Prérequis
 
@@ -22,7 +20,7 @@ FluxCD Viewer est une interface web légère permettant de visualiser et monitor
 
 \```bash
 
-# Lancer le container avec votre kubeconfig monté
+## Lancer le container avec votre kubeconfig monté
 
 docker run -p 8080:8080 \
  -v ~/.kube/config:/root/.kube/config \
@@ -31,14 +29,7 @@ docker run -p 8080:8080 \
 
 ### Option 2 : Helm
 
-\```bash
-
-# Ajouter le repo Helm
-
-helm repo add fluxcd-viewer <https://didlawowo.github.io/fluxcd-viewer>
-helm repo update
-
-# Installer le chart
+## Installer le chart
 
 helm install fluxcd-viewer fluxcd-viewer/fluxcd-viewer
 \```
@@ -47,10 +38,9 @@ helm install fluxcd-viewer fluxcd-viewer/fluxcd-viewer
 
 L'application utilise les variables d'environnement suivantes :
 
-| Variable     | Description                       | Default          |
-| ------------ | --------------------------------- | ---------------- |
-| `PORT`       | Port d'écoute du serveur          | `8080`           |
-| `KUBECONFIG` | Chemin vers le fichier kubeconfig | `~/.kube/config` |
+| Variable | Description              | Default |
+| -------- | ------------------------ | ------- |
+| `PORT`   | Port d'écoute du serveur | `8080`  |
 
 ## 🔍 Utilisation
 

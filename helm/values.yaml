@@ -1,14 +1,14 @@
 image:
   repository: fizzbuzz2/fluxcd-viewer
-  tag: "ce54ed0"
+  tag: "v1.0.0"
   pullPolicy: "IfNotPresent"
-  pullSecrets:
-    - name: registry-credentials
+  pullSecrets: []
+
 commonLabels:
-  tags.datadoghq.com/env: home
-  tags.datadoghq.com/service: fluxcd-viewer
-  tags.datadoghq.com/version: v1.0.0
-domainName: "fluxcd-viewer.develop.oursain.net"
+  env: dev
+
+domainName: "fluxcd-viewer.example.com"
+
 autoscaling:
   enabled: false
 replicas: 1
@@ -19,18 +19,18 @@ strategy:
     maxSurge: 25%
 application:
   ports:
-    - name: http
-      containerPort: 5000
-      protocol: TCP
+  - name: http
+    containerPort: 8080
+    protocol: TCP
   containerName: fluxcd-viewer
   command: []
   args: []
+
 service:
   port: 80
-  targetPort: 5000
+  targetPort: 8080
   type: ClusterIP
   portName: http
-externalSecrets: []
 secrets:
   dotenv: []
   # - name: app-dotenv
@@ -42,26 +42,23 @@ configMaps:
   files: []
   dotenv: []
 volumeMounts: []
-# - name: fluxcd-viewer
-#   mountPath: /app/url.txt
 
 volumes: []
-# - name: fluxcd-viewer
-#   configMap:
-#     name: fluxcd-viewer
+
 ingress:
   ingressClassName: traefik
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-cloudflare
+  annotations: {}
+  hosts:
+  - host: fluxcd-viewer.develop.oursain.net
+    paths:
 serviceAccount:
   annotations: {}
   name: fluxtcd-viewer
-podAnnotations:
-  ad.datadoghq.com/fluxcd-viewer.logs: '[{"source":"python", "service":"fluxcd-viewer}]'
+podAnnotations: {}
 initContainers: []
 resources:
   limits:
-    cpu: 200m
+    cpu: 100m
     memory: 256Mi
   requests:
     cpu: 50m
@@ -71,8 +68,8 @@ nodeSelector: {}
 livenessProbe:
   httpGet:
     scheme: HTTP
-    path: /
-    port: 3000
+    path: /health
+    port: 8080
   initialDelaySeconds: 10
   periodSeconds: 30
   timeoutSeconds: 2
@@ -81,8 +78,8 @@ livenessProbe:
 readinessProbe:
   httpGet:
     scheme: HTTP
-    path: /
-    port: 3000
+    path: /health
+    port: 8080
   initialDelaySeconds: 5
   periodSeconds: 30
   timeoutSeconds: 2

@@ -6,7 +6,7 @@ tasks:
     cmds:
     - task --list
 
-  run:
+  run-dev:
     desc: Run the go project
     cmds:
     - go run main.go
@@ -16,7 +16,7 @@ tasks:
     cmds:
     - go mod
 
-  up:
+  start:
     desc: Start docker compose services
     cmds:
     - docker compose up -d
