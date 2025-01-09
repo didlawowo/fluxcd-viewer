@@ -9,6 +9,8 @@ FluxCD Viewer is a lightweight web interface for visualizing and monitoring the 
 - Grouping by categories (apis, apps, addons)
 - Detailed conditions and error messages
 
+![alt text](assets/image.png)
+
 ## 🛠️ Prerequisites
 
 - Kubernetes cluster with FluxCD installed
