@@ -148,17 +148,23 @@ func getStatusFromConditions(conditions []Condition) string {
 }
 
 func getK8sClient() (*rest.Config, error) {
-	home := homedir.HomeDir()
-	kubeconfig := filepath.Join(home, ".kube", "config")
-
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	// 🔍 Tente d'abord de charger la configuration in-cluster
+	config, err := rest.InClusterConfig()
 	if err != nil {
-		return nil, err
+		// 🏠 Si échec, essaie la config locale
+		home := homedir.HomeDir()
+		kubeconfig := filepath.Join(home, ".kube", "config")
+
+		// 🔧 Construit la config depuis le fichier kubeconfig
+		config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+		if err != nil {
+			return nil, fmt.Errorf("❌ impossible de charger la configuration Kubernetes: %v", err)
+		}
+		return config, nil
 	}
-
-	return config, nil // 🔑 Retourne aussi la config
-
+	return config, nil
 }
+
 func extractGroupFromPath(path string) string {
 	// Divise le chemin en segments
 	segments := strings.Split(path, "/")
@@ -179,6 +185,7 @@ func extractGroupFromPath(path string) string {
 }
 
 func main() {
+
 	// 📝 Log de démarrage
 	log.Printf("🚀 Démarrage du serveur Frontend FluxCD Kustomizations...")
 
