@@ -4,9 +4,9 @@ kind: ClusterRole
 metadata:
   name: {{ template "application.fullname" . }}
 rules:
-- apiGroups: ["kustomize.toolkit.fluxcd.io/v1"]
-  resources: ["kustomizations", ]
-  verbs: ["get", "list"]
+- apiGroups: ["kustomize.toolkit.fluxcd.io"]
+  resources: ["*" ]
+  verbs: ["get", "list", "watch"]
 ---
 # Role binding definition (e.g., ingress-reader-binding.yaml)
 apiVersion: rbac.authorization.k8s.io/v1

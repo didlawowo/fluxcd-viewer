@@ -40,3 +40,9 @@ tasks:
     desc: List docker compose services
     cmds:
     - docker compose ps
+
+  deploy:
+    desc: deploy helm chart
+
+    cmds:
+    - helm upgrade --install fluxcd-viewer helm/ -n fluxcd-viewer --create-namespace --wait --timeout 1m

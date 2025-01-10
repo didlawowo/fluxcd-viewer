@@ -16,9 +16,9 @@ strategy:
     maxSurge: 25%
 application:
   ports:
-    - name: http
-      containerPort: 8080
-      protocol: TCP
+  - name: http
+    containerPort: 8080
+    protocol: TCP
   containerName: fluxcd-viewer
   command: []
   args: []
@@ -43,11 +43,11 @@ ingress:
   ingressClassName: traefik
   annotations: {}
   hosts:
-    - host: fluxcd-viewer.develop.oursain.net
-      paths:
+  - host: fluxcd-viewer.develop.oursain.net
+    paths:
 serviceAccount:
   annotations: {}
-  name: fluxtcd-viewer
+  name: fluxcd-viewer
 podAnnotations: {}
 initContainers: []
 resources:
