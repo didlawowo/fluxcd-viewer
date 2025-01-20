@@ -307,7 +307,7 @@ func extractGroupFromPath(path string) string {
 
 func main() {
 	// 📝 Log de démarrage
-	log.Printf("🚀 Démarrage du serveur Frontend FluxCD Kustomizations...")
+	log.Printf("🚀 Démarrage du serveur Frontend FluxCD Viewer...")
 
 	// Servir les fichiers statiques
 	fs := http.FileServer(http.Dir("static"))
