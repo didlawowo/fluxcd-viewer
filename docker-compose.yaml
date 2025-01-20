@@ -5,7 +5,7 @@ services:
     image: fizzbuzz2/fluxcd-viewer
     build: 
       platforms:
-          - linux/amd64
+          # - linux/amd64
           - linux/arm64
       context: .
       dockerfile: Dockerfile
