@@ -1,11 +1,12 @@
 # 🚀 FluxCD Viewer
 
-FluxCD Viewer is a lightweight web interface for visualizing and monitoring the state of your FluxCD Kustomizations in your Kubernetes cluster.
+FluxCD Viewer is a lightweight web interface for visualizing and monitoring FluxCD resources in your Kubernetes cluster.
 
 ## 🎯 Features
 
 - Overview of FluxCD Kustomizations
-- Real-time deployment status  
+- Overview of FluxCD HelmReleases
+- Real-time deployment status
 - Grouping by categories (apis, apps, addons)
 - Detailed conditions and error messages
 
@@ -45,10 +46,10 @@ The application uses the following environment variables:
 ## 🔍 Usage
 
 Access the web interface: <http://localhost:8080>
-The interface automatically displays your Kustomizations
-Click on a Kustomization to see its details
+The interface automatically displays your Kustomizations and HelmReleases
+Click on an item to see its details
 
-## 🏗️ Local Developpment
+## 🏗️ Local Development
 
 ### Clone the repo
 

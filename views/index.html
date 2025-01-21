@@ -33,7 +33,7 @@
                 <input type="text" id="search" placeholder="🔍 Search..." class="search-input">
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">All</button>
-                    {{range $group, $_ := getUniqueGroups .Kustomizations}}
+                    {{range $group, $_ := getUniqueGroups .Kustomizations .HelmReleases}}
                     <button class="filter-btn" data-filter="{{$group}}">{{title $group}}</button>
                     {{end}}
                 </div>
@@ -45,10 +45,10 @@
             <div class="spinner"></div>
         </div>
 
-        <div class="kustomizations-grid">
+        <div class="grid">
             {{if .Kustomizations}}
             {{range .Kustomizations}}
-            <div class="kustomization-card" data-category="{{.Group}}">
+            <div class="card" data-category="{{.Group}}">
                 <div class="card-header">
                     <div class="title-section">
                         <div class="namespace-badge">{{.Namespace}}</div>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                     <div class="actions">
-                        <button class="action-btn" onclick="showDetails('{{.Resource}}', '{{.Namespace}}')">
+                        <button class="action-btn" onclick="showDetailsKS('{{.Resource}}', '{{.Namespace}}')">
                             <i class="fas fa-eye"></i> Details
                         </button>
                     </div>
@@ -87,6 +87,47 @@
                 <p>No Kustomizations found</p>
             </div>
             {{end}}
+            {{if .HelmReleases}}
+            {{range .HelmReleases}}
+            <div class="card" data-category="{{.Group}}">
+                <div class="card-header">
+                    <div class="title-section">
+                        <div class="namespace-badge">{{.Namespace}}</div>
+                        <h3 class="resource-name">{{.Resource}}</h3>
+                    </div>
+                    <div class="status-icon {{if eq .Status "False"}}status-error{{else}}status-ok{{end}}"> 
+                        {{if eq .Status "True"}}
+                        <i class="fas fa-check-circle"> </i>
+                        {{else}}
+                        <i class="fas fa-exclamation-circle"> </i>
+                        {{end}}
+                        {{.Status}}
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="info-group">
+                        <div class="info-item path">
+                            <span class="label">📁 Chart:</span>
+                            <span class="value">{{.Chart}}</span>
+                        </div>
+                        <div class="info-item commit">
+                            <span class="label">#️⃣ Version:</span>
+                            <span class="commit-hash" title="{{.LastApplied}}">{{.Version}}</span>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn" onclick="showDetailsHR('{{.Resource}}', '{{.Namespace}}')">
+                            <i class="fas fa-eye"></i> Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+            {{else}}
+            <div class="no-data">
+                <p>No HelmReleases found</p>
+            </div>
+            {{end}}
         </div>
     </div>
 
@@ -94,7 +135,7 @@
     <div id="detailsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Kustomization Details</h2>
+                <h2>Details</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
@@ -125,7 +166,7 @@
             const searchText = document.getElementById('search').value.toLowerCase();
             const selectedFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
 
-            document.querySelectorAll('.kustomization-card').forEach(card => {
+            document.querySelectorAll('.card').forEach(card => {
                 const cardText = card.textContent.toLowerCase();
                 const cardCategory = card.getAttribute('data-category');
 
@@ -184,7 +225,7 @@
         }
 
         // 🎯 Détails d'une Kustomization
-        async function showDetails(resource, namespace) {
+        async function showDetailsKS(resource, namespace) {
             const modal = document.getElementById('detailsModal');
             const content = document.getElementById('detailsContent');
 
@@ -250,6 +291,75 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error fetching kustomization details');
+            }
+        }
+        // 🎯 Détails d'une HelmRelease
+        async function showDetailsHR(resource, namespace) {
+            const modal = document.getElementById('detailsModal');
+            const content = document.getElementById('detailsContent');
+
+            try {
+                const response = await fetch(`/details?name=${resource}&namespace=${namespace}`);
+                if (!response.ok) throw new Error('Failed to fetch details');
+
+                const data = await response.json();
+
+                // 📝 Construction du HTML avec une meilleure structure
+                let html = `
+            <div class="details-section">
+                <div class="info-row">
+                    <strong>Resource</strong>
+                    <span>${data.resource}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Namespace</strong>
+                    <span>${data.namespace}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Chart</strong>
+                    <span>${data.chart}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Status</strong>
+                    <span class="status-${data.status.toLowerCase()}">${data.status}</span>
+                </div>
+            </div>`;
+
+                // ⚠️ Section message d'erreur
+                if (data.message) {
+                    html += `
+            <div class="error-details">
+                <h3>Error Details</h3>
+                <div class="error-message">
+                    ${formatErrorMessage(data.message)}
+                </div>
+            </div>`;
+                }
+
+                // 🔍 Section conditions
+                if (data.conditions && data.conditions.length > 0) {
+                    html += `<div class="conditions-section">
+                    <h3>Conditions</h3>`;
+                    data.conditions.forEach(condition => {
+                        html += `
+                    <div class="condition">
+                        <div><strong>Type:</strong> ${condition.type}</div>
+                        <div><strong>Status:</strong> 
+                            <span class="status-${condition.status.toLowerCase()}">${condition.status}</span>
+                        </div>
+                        <div><strong>Reason:</strong> ${condition.reason}</div>
+                        <div><strong>Message:</strong> ${condition.message}</div>
+                    </div>`;
+                    });
+                    html += `</div>`;
+                }
+
+                content.innerHTML = html;
+                modal.style.display = "block";
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error fetching HelmRelease details');
             }
         }
         // 🎯 Gestion du modal

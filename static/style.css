@@ -109,14 +109,14 @@ header {
     border-color: var(--primary-color);
 }
 
-/* 📊 Grille des Kustomizations */
-.kustomizations-grid {
+/* 📊 Grille */
+.grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
 }
 
-.kustomization-card {
+.card {
     background: var(--card-background);
     border-radius: 0.5rem;
     box-shadow: var(--shadow-md);
