@@ -1,6 +1,6 @@
 image:
   repository: fizzbuzz2/fluxcd-viewer
-  tag: "3b4b7b9"
+  tag: "42d6f08"
   pullPolicy: "IfNotPresent"
   pullSecrets: []
 commonLabels:
