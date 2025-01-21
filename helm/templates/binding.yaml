@@ -7,6 +7,9 @@ rules:
 - apiGroups: ["kustomize.toolkit.fluxcd.io"]
   resources: ["*" ]
   verbs: ["get", "list", "watch"]
+- apiGroups: ["helm.toolkit.fluxcd.io"]
+  resources: ["*" ]
+  verbs: ["get", "list", "watch"]
 ---
 # Role binding definition (e.g., ingress-reader-binding.yaml)
 apiVersion: rbac.authorization.k8s.io/v1
