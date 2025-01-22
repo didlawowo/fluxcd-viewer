@@ -17,15 +17,15 @@
                 <div class="stats">
                     <div class="stat-item">
                         <span class="stat-label">Total</span>
-                        <span class="stat-value" id="total-count">{{len .Kustomizations}}</span>
+                        <span class="stat-value" id="total-count">{{countAll .Kustomizations .HelmReleases}}</span>
                     </div>
                     <div class="stat-item success">
                         <span class="stat-label">Healthy</span>
-                        <span class="stat-value" id="success-count">{{countHealthy .Kustomizations}}</span>
+                        <span class="stat-value" id="success-count">{{countHealthy .Kustomizations .HelmReleases}}</span>
                     </div>
                     <div class="stat-item error">
                         <span class="stat-label">Failed</span>
-                        <span class="stat-value" id="error-count">{{countFailed .Kustomizations}}</span>
+                        <span class="stat-value" id="error-count">{{countFailed .Kustomizations .HelmReleases}}</span>
                     </div>
                 </div>
             </div>
