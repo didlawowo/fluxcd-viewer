@@ -418,19 +418,32 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 			}
 			return lastApplied
 		},
-		"countHealthy": func(kustomizations []Kustomization) int {
+		"countAll": func(kustomizations []Kustomization, helmreleases []HelmRelease) int {
+			return len(kustomizations) + len(helmreleases)
+		},
+		"countHealthy": func(kustomizations []Kustomization, helmreleases []HelmRelease) int {
 			count := 0
 			for _, k := range kustomizations {
 				if k.Status == "True" {
 					count++
 				}
 			}
+			for _, hr := range helmreleases {
+				if hr.Status == "True" {
+					count++
+				}
+			}
 			return count
 		},
-		"countFailed": func(kustomizations []Kustomization) int {
+		"countFailed": func(kustomizations []Kustomization, helmreleases []HelmRelease) int {
 			count := 0
 			for _, k := range kustomizations {
 				if k.Status != "True" {
+					count++
+				}
+			}
+			for _, hr := range helmreleases {
+				if hr.Status != "True" {
 					count++
 				}
 			}
