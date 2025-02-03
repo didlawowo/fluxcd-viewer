@@ -14,7 +14,7 @@
         <header>
             <div class="header-content">
                 <h1>FluxCD Viewer</h1>
-                <div class="stats">
+                <div class="stats">Kustomizations
                     <div class="stat-item">
                         <span class="stat-label">Total</span>
                         <span class="stat-value" id="total-count">{{len .Kustomizations}}</span>
@@ -28,7 +28,7 @@
                         <span class="stat-value" id="error-count">{{countFailedKs .Kustomizations}}</span>
                     </div>
                 </div>
-                <div class="stats">
+                <div class="stats">Helm Releases
                     <div class="stat-item">
                         <span class="stat-label">Total</span>
                         <span class="stat-value" id="total-count">{{len .HelmReleases}}</span>
@@ -70,9 +70,9 @@
                     </div>
                     <div class="status-icon {{if eq .Status "False"}}status-error{{else}}status-ok{{end}}">
                         {{if eq .Status "True"}}
-                        <i class="fas fa-check-circle"> </i>
+                        <i class="fas fa-check-circle"></i>&nbsp;
                         {{else}}
-                        <i class="fas fa-exclamation-circle"> </i>
+                        <i class="fas fa-exclamation-circle"></i>&nbsp;
                         {{end}}
                         {{.Status}}
                     </div>
@@ -109,11 +109,11 @@
                         <div class="namespace-badge">{{.Namespace}}</div>
                         <h3 class="resource-name">{{.Resource}}</h3>
                     </div>
-                    <div class="status-icon {{if eq .Status " False"}}status-error{{else}}status-ok{{end}}">
+                    <div class="status-icon {{if eq .Status "False"}}status-error{{else}}status-ok{{end}}">
                         {{if eq .Status "True"}}
-                        <i class="fas fa-check-circle"> </i>
+                        <i class="fas fa-check-circle"></i>&nbsp;
                         {{else}}
-                        <i class="fas fa-exclamation-circle"> </i>
+                        <i class="fas fa-exclamation-circle"></i>&nbsp;
                         {{end}}
                         {{.Status}}
                     </div>

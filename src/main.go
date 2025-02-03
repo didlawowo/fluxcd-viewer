@@ -108,7 +108,7 @@ func getKustomizations() ([]Kustomization, error) {
 		log.Errorf("❌ Erreur lors de la récupération du client Kubernetes: %v", err)
 		return nil, fmt.Errorf("❌ erreur connexion cluster: %v", err)
 	}
-	log.Infof("✅ Connexion au cluster réussie")
+	log.Debugf("✅ Connexion au cluster réussie")
 
 	// 🚀 Création du client dynamique
 	dynamicClient, err := dynamic.NewForConfig(config)

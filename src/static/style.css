@@ -60,6 +60,33 @@ header {
     align-items: center;
 }
 
+.stat-item.success .stat-value {
+    color: var(--success-color);
+}
+
+.stat-item.error .stat-value {
+    color: var(--error-color);
+}
+
+.card-header {
+    justify-content: space-between; /* Pour bien séparer le titre et le status */
+    align-items: center;  /* Pour aligner verticalement */
+}
+
+.status-icon {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: auto; /* Pour forcer l'alignement à droite */
+    white-space: nowrap; /* Pour éviter le retour à la ligne */
+}
+
+/* Pour uniformiser la taille des indicateurs de status */
+.status-icon {
+    font-size: 0.875rem; /* Taille uniforme */
+}
+
 .stat-label {
     font-size: 0.875rem;
     color: var(--text-secondary);
@@ -112,8 +139,9 @@ header {
 /* 📊 Grille */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);  /* 3 colonnes de taille égale */
+    gap: 20px;  /* espace entre les cartes */
+    padding: 20px;
 }
 
 .card {
@@ -162,9 +190,12 @@ header {
 .namespace-badge {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
+    margin: auto 0.5rem;
+    border-radius: 0.25rem;
     background: var(--background-color);
     border-radius: 0.25rem;
     color: var(--text-secondary);
+    max-width: 100px; 
 }
 
 .info-group {
@@ -244,6 +275,7 @@ header {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
+    margin-top: auto;
 }
 
 .action-btn {
