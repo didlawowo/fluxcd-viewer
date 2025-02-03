@@ -7,10 +7,10 @@ FluxCD Viewer is a lightweight web interface for visualizing and monitoring Flux
 - Overview of FluxCD Kustomizations
 - Overview of FluxCD HelmReleases
 - Real-time deployment status
-- Grouping by categories (apis, apps, addons)
+- Grouping by categories (based on the first path)
 - Detailed conditions and error messages
 
-![alt text](assets/image.png)
+![alt text](assets/front.png)
 
 ## 🛠️ Prerequisites
 
@@ -68,6 +68,8 @@ go mod download
 
 ```bash
 go run main.go
+# or
+air # for hot-reload
 ```
 
 ## 🔐 Security
@@ -84,4 +86,4 @@ This project was inspired by the need for a simple and lightweight web interface
 
 ## 📄 Licence
 
-MIT
+see LiCENSE file
