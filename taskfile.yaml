@@ -7,9 +7,9 @@ tasks:
     - task --list
 
   run-dev:
-    desc: Run the go project
+    desc: Run the go project with air
     cmds:
-    - go run main.go
+    - air
 
   bootstrap:
     desc: Initialize the project and install dependencies
@@ -43,6 +43,5 @@ tasks:
 
   deploy:
     desc: deploy helm chart
-
     cmds:
     - helm upgrade --install fluxcd-viewer helm/ -n fluxcd-viewer --create-namespace --wait --timeout 1m

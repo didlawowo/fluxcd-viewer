@@ -1,3 +1,4 @@
 test/bootstrap.sh
 .envrc
 main
+src/tmp
