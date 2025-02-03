@@ -45,7 +45,7 @@ jobs:
           sbom: true
           provenance: mode=max
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:${{ steps.vars.outputs.SHORT_SHA }}
-          context: .
+          context: src
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:buildcache,mode=max
       
