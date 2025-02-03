@@ -1,0 +1,10 @@
+Dockerfile
+docker-compose.yaml
+taskfile.yaml
+.git
+.gitignore
+README.md
+LICENSE
+*.md
+*.yaml
+*.yml
