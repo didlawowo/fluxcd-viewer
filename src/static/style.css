@@ -143,6 +143,7 @@ header {
     align-items: center;
     padding: 4px 8px;
     border-radius: 4px;
+    margin-right: 3px; 
     font-size: 0.9em;
 }
 .status-ok {
