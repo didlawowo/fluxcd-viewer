@@ -49,6 +49,23 @@ Access the web interface: <http://localhost:8080>
 The interface automatically displays your Kustomizations and HelmReleases
 Click on an item to see its details
 
+## Using Task
+
+```shell
+➜  fluxcd-viewer git:(main) task       
+
+task: Available tasks for this project:
+* bootstrap:       Initialize the project and install dependencies
+* build:           Stop docker compose services
+* default:         list all tasks
+* deploy:          deploy helm chart
+* down:            Stop docker compose services
+* logs:            View docker compose logs
+* ps:              List docker compose services
+* run-dev:         Run the go project with air
+* start:           Start docker compose services
+```
+
 ## 🏗️ Local Development
 
 ### Clone the repo

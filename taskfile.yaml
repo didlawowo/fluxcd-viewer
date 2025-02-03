@@ -13,33 +13,33 @@ tasks:
 
   bootstrap:
     desc: Initialize the project and install dependencies
+    dir: src
     cmds:
     - go mod
 
   start:
     desc: Start docker compose services
+    dir: src
     cmds:
     - docker compose up -d
 
   build:
     desc: Stop docker compose services
+    dir: src
     cmds:
     - docker compose build
 
   down:
     desc: Stop docker compose services
+    dir: src
     cmds:
     - docker compose down
 
   logs:
     desc: View docker compose logs
+    dir: src
     cmds:
     - docker compose logs -f
-
-  ps:
-    desc: List docker compose services
-    cmds:
-    - docker compose ps
 
   deploy:
     desc: deploy helm chart
