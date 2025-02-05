@@ -1,0 +1,41 @@
+name: Generate Changelog
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Generate changelog
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0")
+          RANGE="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)..$LATEST_TAG"
+          
+          echo "# Changelog pour $LATEST_TAG" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## 🚀 Nouvelles fonctionnalités" >> CHANGELOG.md
+          git log $RANGE --pretty=format:"- %s" --grep="^feat:" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## 🐛 Corrections de bugs" >> CHANGELOG.md
+          git log $RANGE --pretty=format:"- %s" --grep="^fix:" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "## 📝 Autres changements" >> CHANGELOG.md
+          git log $RANGE --pretty=format:"- %s" --grep="^(chore|docs|style|refactor|perf|test):" >> CHANGELOG.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: CHANGELOG.md
+          token: ${{ secrets.GITHUB_TOKEN }}
