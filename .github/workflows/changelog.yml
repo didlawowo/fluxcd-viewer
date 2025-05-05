@@ -35,7 +35,7 @@ jobs:
           git log $RANGE --pretty=format:"- %s" --grep="^(chore|docs|style|refactor|perf|test):" >> CHANGELOG.md
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
