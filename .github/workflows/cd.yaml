@@ -37,30 +37,30 @@ jobs:
           echo "REPO_NAME=${REPO_NAME}" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     sbom: true
-      #     provenance: mode=max
-      #     platforms: linux/amd64,linux/arm64
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:${{ steps.vars.outputs.SHORT_SHA }}
-      #     context: .
-      #     cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:buildcache
-      #     cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:buildcache,mode=max
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: true
+          sbom: true
+          provenance: mode=max
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:${{ steps.vars.outputs.SHORT_SHA }}
+          context: src
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}:buildcache,mode=max
       
-      # - name: Update Helm values
-      #   run: |
-      #     yq e -i '.image.repository = "${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}"' helm/values.yaml
-      #     yq e -i '.image.tag = "${{ steps.vars.outputs.SHORT_SHA }}"' helm/values.yaml
+      - name: Update Helm values
+        run: |
+          yq e -i '.image.repository = "${{ secrets.DOCKER_USERNAME }}/${{ steps.vars.outputs.REPO_NAME }}"' helm/values.yaml
+          yq e -i '.image.tag = "${{ steps.vars.outputs.SHORT_SHA }}"' helm/values.yaml
       
-      # - name: Configure Git
-      #   run: |
-      #     git config user.name "GitHub Actions"
-      #     git config user.email "github-actions@github.com"
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
       
-      # - name: Commit and push changes
-      #   run: |
-      #     git add helm/values.yaml
-      #     git commit -m "chore: update image tag to ${{ steps.vars.outputs.SHORT_SHA }}"
-      #     git push
+      - name: Commit and push changes
+        run: |
+          git add helm/values.yaml
+          git commit -m "chore: update image tag to ${{ steps.vars.outputs.SHORT_SHA }}"
+          git push
