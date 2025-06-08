@@ -1,0 +1,14 @@
+
+services:
+    app:
+      image: fizzbuzz2/portal-checker:v1.7.0
+      ports:
+        - "5000:5000"
+      build:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+        context: . # docker-compose.yml in current directory
+      environment:
+        - FLASK_APP=app.py
+        - FLASK_ENV=development
