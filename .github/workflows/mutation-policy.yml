@@ -1,0 +1,91 @@
+name: Mutation testing policy
+
+on:
+  issues:
+    types: [labeled]
+  pull_request_target:
+    types: [opened, synchronize, reopened, labeled, unlabeled, edited]
+
+jobs:
+  notify:
+    if: >-
+      github.event_name == 'issues' &&
+      (github.event.label.name == 'complexity:high' ||
+       github.event.label.name == 'priority:high')
+    permissions:
+      contents: read
+      issues: write
+    runs-on: ${{ vars.RUNNER || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Explain mandatory mutation testing
+        env:
+          POLICY_PROVIDER: github
+          POLICY_API_URL: ${{ github.api_url }}
+          POLICY_REPOSITORY: ${{ github.repository }}
+          POLICY_TOKEN: ${{ github.token }}
+          POLICY_EVENT_PATH: ${{ github.event_path }}
+        run: python .github/scripts/mutation_policy.py notify
+
+  mutation-gate:
+    if: github.event_name == 'pull_request_target'
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    runs-on: ${{ vars.RUNNER || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout trusted policy
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Classify pull request
+        id: policy
+        env:
+          POLICY_PROVIDER: github
+          POLICY_API_URL: ${{ github.api_url }}
+          POLICY_REPOSITORY: ${{ github.repository }}
+          POLICY_TOKEN: ${{ github.token }}
+          POLICY_EVENT_PATH: ${{ github.event_path }}
+        run: python .github/scripts/mutation_policy.py classify
+
+      - name: Checkout pull request code
+        if: steps.policy.outputs.required == 'true'
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run mandatory mutation testing
+        if: steps.policy.outputs.required == 'true'
+        shell: bash
+        env:
+          MUTATION_POLICY_LABELS: ${{ steps.policy.outputs.labels }}
+        run: |
+          set -euo pipefail
+          if [[ ! -f .ci/mutation.sh ]]; then
+            echo "::error::.ci/mutation.sh is required for high-risk issues (${MUTATION_POLICY_LABELS})."
+            exit 1
+          fi
+          if ! grep -Eiq 'mutmut[[:space:]]+run|gremlins[[:space:]]+unleash|stryker([^[:alnum:]]+[^[:space:]]+)*[[:space:]]+run|cargo[[:space:]]+mutants|pitest|infection' .ci/mutation.sh; then
+            echo "::error::.ci/mutation.sh must invoke a supported real mutation engine."
+            exit 1
+          fi
+          # The mutation script comes from the PR. Give it no forge credentials
+          # or inherited secrets; only the minimum process environment it needs.
+          env -i \
+            PATH="$PATH" \
+            HOME="$HOME" \
+            CI=true \
+            MUTATION_POLICY_LABELS="$MUTATION_POLICY_LABELS" \
+            bash .ci/mutation.sh
+
+      - name: Mutation testing not required
+        if: steps.policy.outputs.required != 'true'
+        run: echo "No complexity:high or priority:high label found on the PR or linked issue."
